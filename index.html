@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProQR Studio | Enterprise Static Generation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #020617;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none; /* Prevents messy highlighting */
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .qr-shadow {
+            box-shadow: 0 0 50px -12px rgba(96, 165, 250, 0.3);
+        }
+        #canvas-container canvas {
+            border-radius: 24px;
+            max-width: 100%;
+            height: auto !important;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="relative">
+
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-lg">
+        <div class="glass rounded-full px-8 py-4 flex justify-center items-center shadow-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-lg flex items-center justify-center font-extrabold text-white text-sm shadow-lg">Q</div>
+                <span class="text-xl font-800 tracking-tighter uppercase italic">
+                    PRO<span class="gradient-text">GEN</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 blur-[140px] rounded-full animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-purple-600/10 blur-[140px] rounded-full animate-pulse" style="animation-delay: 2s;"></div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-6 pt-40 pb-20">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            
+            <div class="space-y-10">
+                <div class="space-y-4">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-semibold tracking-widest text-blue-400 uppercase">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        </span>
+                        Static Encryption Enabled
+                    </div>
+                    <h1 class="text-6xl md:text-7xl font-bold tracking-tight leading-[1.1]">
+                        The Future of <br><span class="gradient-text">Permanent</span> Data.
+                    </h1>
+                    <p class="text-slate-400 text-lg font-light leading-relaxed max-w-md">
+                        Generate high-resolution assets that never expire. Pure client-side generation for maximum privacy and performance.
+                    </p>
+                </div>
+
+                <div class="glass p-10 rounded-[2.5rem] space-y-8 shadow-2xl border-white/5 bg-white/[0.01]">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] ml-1">Configuration Endpoint</label>
+                        <input type="text" id="qr-data" value="https://google.com" 
+                            class="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all text-white font-medium"
+                            placeholder="https://your-domain.com">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] ml-1">Brand Accent</label>
+                            <input type="color" id="qr-color" value="#ffffff" 
+                                class="w-full h-14 bg-slate-900/50 border border-white/10 rounded-2xl cursor-pointer p-2 hover:bg-slate-800 transition-colors">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] ml-1">Dot Geometry</label>
+                            <select id="qr-type" class="w-full h-14 bg-slate-900/50 border border-white/10 rounded-2xl px-4 outline-none appearance-none cursor-pointer text-sm font-medium hover:bg-slate-800 transition-colors">
+                                <option value="rounded">Rounded Geometric</option>
+                                <option value="dots">Technical Dots</option>
+                                <option value="classy">High-End Classy</option>
+                                <option value="square">Standard Square</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div class="relative group">
+                    <div class="absolute -inset-8 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-[4rem] blur-3xl opacity-50 group-hover:opacity-100 transition duration-1000"></div>
+                    <div id="canvas-container" class="relative bg-white p-10 rounded-[3rem] qr-shadow transition-transform duration-700 group-hover:scale-[1.02]">
+                        </div>
+                </div>
+
+                <div class="mt-16 flex flex-col sm:flex-row gap-5 w-full max-w-md">
+                    <button onclick="download('png')" class="flex-1 bg-white text-slate-900 font-extrabold py-5 px-8 rounded-2xl hover:bg-blue-50 transition-all active:scale-95 shadow-xl flex items-center justify-center gap-2">
+                        Download PNG
+                    </button>
+                    <button onclick="download('svg')" class="flex-1 bg-slate-800/40 border border-white/10 text-white font-extrabold py-5 px-8 rounded-2xl hover:bg-slate-800 transition-all active:scale-95 shadow-lg flex items-center justify-center gap-2">
+                        Export SVG
+                    </button>
+                </div>
+                <p class="mt-8 text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] flex items-center gap-2">
+                    <span class="w-1 h-1 bg-slate-500 rounded-full"></span>
+                    Verified High-Resolution Output
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Security: Prevent Right-Click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        
+        // Security: Prevent Dev Tools Shortcuts
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
+                return false;
+            }
+        };
+
+        const qrCode = new QRCodeStyling({
+            width: 340,
+            height: 340,
+            type: "canvas",
+            data: "https://google.com",
+            dotsOptions: { color: "#000000", type: "rounded" },
+            backgroundOptions: { color: "#ffffff" },
+            cornersSquareOptions: { type: "extra-rounded", color: "#000000" },
+            imageOptions: { crossOrigin: "anonymous", margin: 20 }
+        });
+
+        qrCode.append(document.getElementById("canvas-container"));
+
+        const updateQR = () => {
+            qrCode.update({
+                data: document.getElementById("qr-data").value,
+                dotsOptions: {
+                    color: document.getElementById("qr-color").value,
+                    type: document.getElementById("qr-type").value
+                },
+                cornersSquareOptions: {
+                    color: document.getElementById("qr-color").value
+                }
+            });
+        };
+
+        document.getElementById("qr-data").addEventListener("input", updateQR);
+        document.getElementById("qr-color").addEventListener("input", updateQR);
+        document.getElementById("qr-type").addEventListener("change", updateQR);
+
+        function download(ext) {
+            qrCode.download({ name: "pro-qr-asset", extension: ext });
+        }
+    </script>
+</body>
+</html>
